@@ -34,14 +34,6 @@ app_file() {
 echo $(app_root)/$APP_NAME.jar
 }
 
-log_file_root() {
-echo $(app_root)/logs/$APP_NAME
-}
-
-log_file() {
-echo $(log_file_root)/$APP_NAME.log
-}
-
 std_err_file() {
 echo $(app_root)/std.err
 }
