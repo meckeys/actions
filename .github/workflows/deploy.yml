@@ -26,7 +26,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
         with:
-          repository: 'rnayabed/scripts'
+          repository: 'rnayabed/meckeys-scripts'
           token: ${{ secrets.token }}
 
       - name: Download application jar
