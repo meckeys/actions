@@ -26,12 +26,7 @@ jobs:
       - name: Download application jar
         uses: actions/download-artifact@v4
         with:
-          name: application   
-      
-      - name: vars test
-        run: |
-          echo test
-          echo ${{ inputs.vars }}
+          name: application
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
