@@ -6,9 +6,6 @@ on:
       app-name:
         required: true
         type: string
-      vars:
-        required: false
-        type: string
     secrets:
       host:
         required: true
@@ -34,7 +31,7 @@ jobs:
       - name: vars test
         run: |
           echo test
-          echo ${{ inputs.vars }}
+          echo ${{ secrets.vars }}
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
