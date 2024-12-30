@@ -60,6 +60,7 @@ jobs:
           passphrase: ${{ secrets.passphrase }}
           envs: variablez
           script: |
+            echo test
             echo "${variablez}"
             for var_block in ${variablez}; do
               if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
