@@ -1,3 +1,3 @@
-# deployer
+# actions
 
-Collection of common scripts and workflows used to deploy tracker and rma
+Collection of common GitHub Action workflows and shell scripts used to deploy tracker and rma
