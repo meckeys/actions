@@ -42,10 +42,10 @@ jobs:
         if: ${{ inputs.app-name == 'tracker' }}
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.host }}
-          username: ${{ secrets.username }}
-          key: ${{ secrets.key }}
-          passphrase: ${{ secrets.passphrase }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           envs: BLUEDART_USER_LOGINID, BLUEDART_USER_LICENSEKEY, BLUEDART_API_LICENSE_KEY, DELHIVERY_API_TOKEN, GDRIVE_API_PARENT_ID, GDRIVE_API_SERVICE_ACCOUNT, MECKEYS_API_USERNAME, MECKEYS_API_PASSWORD, MECKEYS_URL_HOST, MECKEYS_WEBHOOK_SECRET, RAZORPAY_API_KEY, RAZORPAY_API_SECRET, SMARTR_API_USERNAME, SMARTR_API_PASSWORD, SPRING_SECURITY_USERS, TWOFACTOR_API_KEY, INTERAKT_API_KEY, ZEPTOMAIL_API_PASSWORD
           script: |
             ./deploy.sh -n ${{ inputs.app-name }} -a start
@@ -73,9 +73,9 @@ jobs:
         if: ${{ inputs.app-name != 'tracker' }}
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.host }}
-          username: ${{ secrets.username }}
-          key: ${{ secrets.key }}
-          passphrase: ${{ secrets.passphrase }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             ./deploy.sh -n ${{ inputs.app-name }} -a start
