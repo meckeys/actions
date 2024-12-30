@@ -1,5 +1,4 @@
 name: Deploy
-description: Sdf
 
 on:
   workflow_call:
