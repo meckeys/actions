@@ -73,6 +73,6 @@ jobs:
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          envs: "$var_names"
+          envs: ${{ env.var_name }}
           script: |
             ./deploy.sh -n ${{ inputs.app-name }} -a start
