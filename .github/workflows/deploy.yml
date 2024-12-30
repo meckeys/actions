@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           source: "${{ inputs.app-name }}.jar"
-          target: "$HOME/apps/${{ inputs.app-name }}"
+          target: "apps/${{ inputs.app-name }}"
 
       - name: Run project
         uses: appleboy/ssh-action@v1.2.0
@@ -75,4 +75,5 @@ jobs:
                 declare -x "${var_block%%=*}=${var_block#*=}"
               fi
             done
+            chown "$(whoami)" "apps/${{ inputs.app-name }}/${{ inputs.app-name }}.jar"
             ./deploy.sh -n "${{ inputs.app-name }}" -a start -e "${{ inputs.extra-args }}"
