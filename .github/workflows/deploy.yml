@@ -10,9 +10,9 @@ on:
         required: false
         type: string
         default: "1.0"
-      extra-args:
+      port:
         required: true
-        type: string
+        type: number
     secrets:
       host:
         required: true
@@ -76,4 +76,4 @@ jobs:
               fi
             done
             chown "$(whoami)" "apps/${{ inputs.app-name }}/${{ inputs.app-name }}.jar"
-            ./deploy.sh -n "${{ inputs.app-name }}" -a start -e "${{ inputs.extra-args }}"
+            ./deploy.sh -n "${{ inputs.app-name }}" -a start -e "-Dserver.port=${{ inputs.port }}"
