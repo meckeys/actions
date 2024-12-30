@@ -19,7 +19,9 @@ on:
       ref:
         required: true
         type: string
-
+      env-vars:
+        required: false
+        type: string
     secrets:
       extra-json-file-name:
         required: false
@@ -35,8 +37,7 @@ on:
         required: true
       passphrase:
         required: true
-      env-vars:
-        required: false
+      
 
 jobs:
   build_and_push:
@@ -120,7 +121,7 @@ jobs:
           passphrase: ${{ secrets.passphrase }}
           script: |
             IFS=$'\n'
-            for line in ${{ secrets.envs }}
+            for line in ${{ inputs.env-vars }}
             do 
               declare -x "$line"
             done
