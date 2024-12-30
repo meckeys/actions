@@ -23,17 +23,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-        with:
-          repository: 'rnayabed/meckeys-scripts' #TODO: rename
-          ref: master
-          token: ${{ secrets.token }}
+      # - name: Checkout the repo
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: 'rnayabed/meckeys-scripts' #TODO: rename
+      #     ref: master
+      #     token: ${{ secrets.token }}
 
       - name: Download application jar
         uses: actions/download-artifact@v4
         with:
           name: application   
+      
+      - name: ls test
+        run: |
+          ls -l
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
@@ -43,12 +47,7 @@ jobs:
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           script: |
-            cd $HOME
-            if [ -f deploy.sh ]; then
-              ./deploy.sh -n ${{ inputs.app-name }} -a stop
-            else
-              echo Unable to find deploy script, skip stopping
-            fi
+            ./deploy.sh -n ${{ inputs.app-name }} -a stop
             rm -rf apps/${{ inputs.app-name }}
 
       - name: Copy project files
@@ -58,7 +57,7 @@ jobs:
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          source: "deploy.sh, ${{ inputs.app-name }}.jar"
+          source: "${{ inputs.app-name }}.jar"
           target: "$HOME/apps/${{ inputs.app-name }}"
           strip_components: 1
 
@@ -70,6 +69,4 @@ jobs:
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           script: |
-            cd $HOME
-            chmod +x deploy.sh
             ./deploy.sh -n ${{ inputs.app-name }} -a start
