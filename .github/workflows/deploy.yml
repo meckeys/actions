@@ -33,7 +33,6 @@ jobs:
         run: |
           echo test
           echo ${{ inputs.vars }}
-          echo ${BLUEDART_USER_LOGINID}
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
@@ -64,4 +63,11 @@ jobs:
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           script: |
+            for var_block in ${{ inputs.vars }}; do
+              if [ "$var_block" =~ ^[A-Za-z]+=.+$ ]; then
+                echo DECLARE
+                declare -x "${var_block}"
+              fi
+            done
+
             ./deploy.sh -n ${{ inputs.app-name }} -a start
