@@ -33,11 +33,7 @@ jobs:
       - name: Download application jar
         uses: actions/download-artifact@v4
         with:
-          name: application
-          path: 'target/'
-
-      - name: Copy deploy script to target
-        run: cp deploy.sh target/
+          name: application   
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
@@ -62,7 +58,7 @@ jobs:
           username: ${{ secrets.username }}
           key: ${{ secrets.sshkey }}
           passphrase: ${{ secrets.passphrase }}
-          source: "target/deploy.sh, target/${{ inputs.app-name }}.jar"
+          source: "deploy.sh, ${{ inputs.app-name }}.jar"
           target: "$HOME/apps/${{ inputs.app-name }}"
           strip_components: 1
 
