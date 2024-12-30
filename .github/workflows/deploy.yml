@@ -13,12 +13,6 @@ on:
         required: false
         default: false
         type: boolean
-      repository:
-        required: true
-        type: string
-      ref:
-        required: true
-        type: string
       env-vars:
         required: false
         type: string
@@ -46,17 +40,6 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4.2.2
 
-      # - name: Checkout app repo
-      #   uses: actions/checkout@v4.2.2
-      #   with:
-      #     repository: ${{ inputs.repository }}
-      #     ref: ${{ inputs.ref }}
-      #     token: ${{ secrets.GH_PAT }}
-
-      - name: test cd
-        run: |
-          ls -l
-
       - name: Install Java
         uses: actions/setup-java@v4.6.0
         with:
@@ -79,7 +62,7 @@ jobs:
           #sed -i 's+./logs/+${HOME}/logs/+g' src/main/resources/logback-spring.xml
 
           IFS=$'\n'
-          for line in ${{ secrets.envs }}
+          for line in ${{ inputs.env-vars }}
           do 
             declare -x "$line"
           done
