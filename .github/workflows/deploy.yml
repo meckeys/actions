@@ -63,12 +63,13 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         env:
           VARS: ${{ secrets.vars }}
+          ARGS: ${{ inputs.extra-args }}
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          envs: VARS
+          envs: VARS, ARGS
           script: |
             for var_block in ${VARS}; do
               if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
@@ -79,7 +80,7 @@ jobs:
             
             OLD_IFS=$IFS
             IFS=';'
-            for arg in ${{ inputs.extra-args }}; do
+            for arg in ${ARGS}; do
               ARGS+=("-e \"$arg\"")
             done
             IFS=$OLD_IFS
