@@ -64,12 +64,8 @@ if [ ! -e "$(app_file)" ]; then
     return 1
 fi
 
-pushd $(app_root) > /dev/null
-
 nohup java -jar "$(app_file)" >/dev/null 2>$(std_err_file) &
 echo $! > "$(pid_file)"
-
-popd > /dev/null
 
 if is_running; then
     echo $APP_NAME successfully started
