@@ -33,9 +33,7 @@ jobs:
         run: |
           echo test
           echo ${{ inputs.vars }}
-          echo ${!${{ inputs.vars }}}
-          a=${{ inputs.vars }}
-          echo ${!a}
+          echo ${BLUEDART_USER_LOGINID}
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
