@@ -23,31 +23,31 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Download application jar
-        uses: actions/download-artifact@v4
-        with:
-          name: application
+      # - name: Download application jar
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: application
 
-      - name: Stop project if running
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.host }}
-          username: ${{ secrets.username }}
-          key: ${{ secrets.key }}
-          passphrase: ${{ secrets.passphrase }}
-          script: |
-            ./deploy.sh -n ${{ inputs.app-name }} -a stop
-            rm -rf apps/${{ inputs.app-name }}
+      # - name: Stop project if running
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.host }}
+      #     username: ${{ secrets.username }}
+      #     key: ${{ secrets.key }}
+      #     passphrase: ${{ secrets.passphrase }}
+      #     script: |
+      #       ./deploy.sh -n ${{ inputs.app-name }} -a stop
+      #       rm -rf apps/${{ inputs.app-name }}
 
-      - name: Copy project files
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.host }}
-          username: ${{ secrets.username }}
-          key: ${{ secrets.key }}
-          passphrase: ${{ secrets.passphrase }}
-          source: "${{ inputs.app-name }}.jar"
-          target: "$HOME/apps/${{ inputs.app-name }}"
+      # - name: Copy project files
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.host }}
+      #     username: ${{ secrets.username }}
+      #     key: ${{ secrets.key }}
+      #     passphrase: ${{ secrets.passphrase }}
+      #     source: "${{ inputs.app-name }}.jar"
+      #     target: "$HOME/apps/${{ inputs.app-name }}"
       
       - name: Parse secrets
         run: |
@@ -55,7 +55,9 @@ jobs:
 
           for var_block in ${vars}; do
             if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
+
               echo "$var_block" >> "$GITHUB_ENV" 
+              echo "$var_block"
               var_names+="${var_block%%=*},"
             fi
           done
@@ -68,13 +70,13 @@ jobs:
         env:
           vars: ${{ secrets.vars }}
 
-      - name: Run project
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.host }}
-          username: ${{ secrets.username }}
-          key: ${{ secrets.key }}
-          passphrase: ${{ secrets.passphrase }}
-          envs: "$var_names"
-          script: |
-            ./deploy.sh -n ${{ inputs.app-name }} -a start
+      # - name: Run project
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.host }}
+      #     username: ${{ secrets.username }}
+      #     key: ${{ secrets.key }}
+      #     passphrase: ${{ secrets.passphrase }}
+      #     envs: "$var_names"
+      #     script: |
+      #       ./deploy.sh -n ${{ inputs.app-name }} -a start
