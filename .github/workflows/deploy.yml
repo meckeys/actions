@@ -64,7 +64,7 @@ jobs:
           IFS=$'\n'
           for line in ${{ inputs.env-vars }}
           do 
-            declare -x "$line"
+            echo "$line" >> "$GITHUB_ENV"
           done
 
           mvn -q clean package
