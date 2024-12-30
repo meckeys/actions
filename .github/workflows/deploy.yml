@@ -56,12 +56,14 @@ jobs:
           for var_block in ${vars}; do
             if [[ "$var_block" =~ ^[A-Za-z]+=.+$ ]]; then
               echo declare!
-              echo $var_block >> "$GITHUB_ENV" 
+              echo "$var_block" >> "$GITHUB_ENV" 
               var_names+="${var_block%%=*},"
             fi
           done
 
           echo "var_names=${var_names%,}" >> "$GITHUB_ENV"
+
+          echo "test: ${var_names}"
 
         env:
           vars: ${{ secrets.vars }}
