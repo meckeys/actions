@@ -10,10 +10,12 @@ usage() {
 cat <<EOF
 
 Usage:
+-v | --version      get version
 -h | --help         print help
 -n | --name         specify app name
 -a | --action       specify action
--v | --version      get version
+-e | --extra-args   extra command line args to be passed
+
 
 List of available actions:
 start           starts application, fails gracefully if already running
@@ -65,7 +67,7 @@ if [ ! -e "$(app_file)" ]; then
     return 1
 fi
 
-nohup java -jar "$(app_file)" >/dev/null 2>$(std_err_file) &
+nohup java "$EXTRA_ARGS" -jar "$(app_file)" >/dev/null 2>$(std_err_file) &
 echo $! > "$(pid_file)"
 
 if is_running; then
@@ -127,6 +129,10 @@ while [ "$#" -gt 0 ]; do
             ;;
         -a | --action )
             ACTION="$2"
+            shift
+            ;;
+        -e | --extra-args )
+            EXTRA_ARGS="$2"
             shift
             ;;
         * )

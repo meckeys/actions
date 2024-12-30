@@ -10,6 +10,9 @@ on:
         required: false
         type: string
         default: "1.0"
+      port:
+        required: true
+        type: number
     secrets:
       host:
         required: true
