@@ -1,3 +1,3 @@
-# scripts
+# deployer
 
-Collection of common scripts used to deploy tracker and rma
+Collection of common scripts and workflows used to deploy tracker and rma
