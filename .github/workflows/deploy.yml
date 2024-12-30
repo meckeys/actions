@@ -53,6 +53,8 @@ jobs:
         run: |
           vn=
 
+          echo "var_namk=123" >> "$GITHUB_ENV"
+
           for var_block in ${vars}; do
             if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
               echo "${var_block%%=*}=${var_block#*=}" >> "$GITHUB_ENV" 
@@ -64,7 +66,9 @@ jobs:
           echo "var_names=${vn%,}" >> "$GITHUB_ENV"
 
           echo "test: ${var_names}"
+          echo "test: ${var_namk}"
           echo "testx: ${ZEPTOMAIL_API_PASSWORD}"
+          cat "$GITHUB_ENV"
 
         env:
           vars: ${{ secrets.vars }}
