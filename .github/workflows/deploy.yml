@@ -56,7 +56,7 @@ jobs:
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
-          key: ${{ secrets.sshkey }}
+          key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           source: "deploy.sh, ${{ inputs.app-name }}.jar"
           target: "$HOME/apps/${{ inputs.app-name }}"
@@ -67,7 +67,7 @@ jobs:
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
-          key: ${{ secrets.sshkey }}
+          key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           script: |
             cd $HOME
