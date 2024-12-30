@@ -23,44 +23,44 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # - name: Download application jar
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: application
+      - name: Download application jar
+        uses: actions/download-artifact@v4
+        with:
+          name: application
 
-      # - name: Stop project if running
-      #   uses: appleboy/ssh-action@v1.2.0
-      #   with:
-      #     host: ${{ secrets.host }}
-      #     username: ${{ secrets.username }}
-      #     key: ${{ secrets.key }}
-      #     passphrase: ${{ secrets.passphrase }}
-      #     script: |
-      #       ./deploy.sh -n ${{ inputs.app-name }} -a stop
-      #       rm -rf apps/${{ inputs.app-name }}
-
-      # - name: Copy project files
-      #   uses: appleboy/scp-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.host }}
-      #     username: ${{ secrets.username }}
-      #     key: ${{ secrets.key }}
-      #     passphrase: ${{ secrets.passphrase }}
-      #     source: "${{ inputs.app-name }}.jar"
-      #     target: "$HOME/apps/${{ inputs.app-name }}"
-
-      - name: Run project
+      - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
-        env:
-          xyz: ${{ secrets.vars }}
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          envs: xyz
           script: |
-            for var_block in ${xyz}; do
+            ./deploy.sh -n ${{ inputs.app-name }} -a stop
+            rm -rf apps/${{ inputs.app-name }}
+
+      - name: Copy project files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.key }}
+          passphrase: ${{ secrets.passphrase }}
+          source: "${{ inputs.app-name }}.jar"
+          target: "$HOME/apps/${{ inputs.app-name }}"
+
+      - name: Run project
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          VARS: ${{ secrets.vars }}
+        with:
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.key }}
+          passphrase: ${{ secrets.passphrase }}
+          envs: VARS
+          script: |
+            for var_block in ${VARS}; do
               if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
                 declare -x "${var_block%%=*}='${var_block#*=}'"
                 echo "${var_block%%=*}='${var_block#*=}'"
