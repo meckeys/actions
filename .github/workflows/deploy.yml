@@ -10,7 +10,7 @@ on:
         required: false
         type: string
         default: "1.0"
-      port:
+      extra-args:
         required: true
         type: number
     secrets:
@@ -75,4 +75,4 @@ jobs:
                 declare -x "${var_block%%=*}=${var_block#*=}"
               fi
             done
-            ./deploy.sh -n ${{ inputs.app-name }} -a start
+            ./deploy.sh -n "${{ inputs.app-name }}" -a start -e "${{ inputs.extra-args }}"
