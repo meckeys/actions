@@ -13,6 +13,7 @@ Usage:
 -h | --help         print help
 -n | --name         specify app name
 -a | --action       specify action
+-v | --version      get version
 
 List of available actions:
 start           starts application, fails gracefully if already running
@@ -111,6 +112,10 @@ fi
 # Handle input
 while [ "$#" -gt 0 ]; do
     case "$1" in
+        -v | --version )
+            echo $VERSION
+            exit 0
+            ;;
         -h | --help )
             echo Meckeys JAR deployer - $VERSION
             usage

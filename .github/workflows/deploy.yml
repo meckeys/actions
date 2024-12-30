@@ -6,6 +6,10 @@ on:
       app-name:
         required: true
         type: string
+      version:
+        required: false
+        type: string
+        default: "1.0"
     secrets:
       host:
         required: true
@@ -17,7 +21,6 @@ on:
         required: true
       vars:
         required: true
-      
 
 jobs:
   deploy:
@@ -28,14 +31,18 @@ jobs:
         with:
           name: application
 
-      - name: Stop project if running
+      - name: Stop application if running & check version
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          script: |
+          script: | 
+            if [ "${{ inputs.version }}" != "$(./deploy.sh -v)" ]; then
+              echo deploy script version mismatch!
+            fi
+
             ./deploy.sh -n ${{ inputs.app-name }} -a stop
             rm -rf apps/${{ inputs.app-name }}
 
