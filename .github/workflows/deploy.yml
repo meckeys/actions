@@ -49,7 +49,7 @@ jobs:
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           source: "${{ inputs.app-name }}.jar"
-          target: "apps/${{ inputs.app-name }}/"
+          #target: "apps/${{ inputs.app-name }}/"
           strip_components: 1
 
       - name: Run project
