@@ -52,21 +52,12 @@ jobs:
       - name: Run project
         uses: appleboy/ssh-action@v1.2.0
         env:
-          variablez: ${{ secrets.vars }}
+          VARIABLES: ${{ secrets.vars }}
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          envs: variablez
+          envs: VARIABLES
           script: |
-            echo test
-            echo "${variablez}"
-            for var_block in ${variablez}; do
-              if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
-                declare -x "${var_block%%=*}='${var_block#*=}'"
-                echo "${var_block%%=*}='${var_block#*=}'"
-              fi
-            done
-
             ./deploy.sh -n ${{ inputs.app-name }} -a start
