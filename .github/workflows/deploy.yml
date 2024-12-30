@@ -10,9 +10,9 @@ on:
         required: false
         type: string
         default: "1.0"
-      extra-args:
-        required: false
-        type: string
+      port:
+        required: true
+        type: number
     secrets:
       host:
         required: true
@@ -77,11 +77,5 @@ jobs:
               fi
             done
             chown "$(whoami)" "apps/${{ inputs.app-name }}/${{ inputs.app-name }}.jar"
-            
-            OLD_IFS=$IFS
-            IFS=';'
-            for arg in ${ARGS}; do
-              ARGS+=("-e \"$arg\"")
-            done
-            IFS=$OLD_IFS
-            ./deploy.sh -n "${{ inputs.app-name }}" -a start "${ARGS[@]}" 
+          
+            ./deploy.sh -n "${{ inputs.app-name }}" -a start -e "-Dserver.port=${{ inputs.port }}"
