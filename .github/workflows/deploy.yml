@@ -29,7 +29,6 @@ jobs:
       - name: ls test
         run: |
           ls -l
-          echo hello world > test.txt
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
@@ -49,9 +48,8 @@ jobs:
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          source: "test.txt, ${{ inputs.app-name }}.jar"
-          target: "$HOME/appsx"
-          strip_components: 1
+          source: "${{ inputs.app-name }}.jar"
+          target: "$HOME/apps/${{ inputs.app-name }}"
 
       - name: Run project
         uses: appleboy/ssh-action@v1.2.0
