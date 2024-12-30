@@ -52,15 +52,16 @@ jobs:
       - name: Run project
         uses: appleboy/ssh-action@v1.2.0
         env:
-          vars: ${{ secrets.vars }}
+          variablez: ${{ secrets.vars }}
         with:
           host: ${{ secrets.host }}
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
-          envs: vars
+          envs: variablez
           script: |
-            for var_block in ${vars}; do
+            echo "${variablez}"
+            for var_block in ${variablez}; do
               if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
                 declare -x "${var_block%%=*}='${var_block#*=}'"
                 echo "${var_block%%=*}='${var_block#*=}'"
