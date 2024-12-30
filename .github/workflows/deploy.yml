@@ -3,26 +3,10 @@ name: Deploy
 on:
   workflow_call:
     inputs:
-      java-version:
-        required: false
-        type: string
       app-name:
         required: true
         type: string
-      extra-json-file:
-        required: false
-        default: false
-        type: boolean
-      env-vars:
-        required: false
-        type: string
     secrets:
-      extra-json-file-name:
-        required: false
-      extra-json-file-content:
-        required: false
-      extra-json-file-dir:
-        required: false
       host:
         required: true
       username:
@@ -37,37 +21,11 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4.2.2
-
-      - name: Install Java
-        uses: actions/setup-java@v4.6.0
+      - name: Download application jar
+        uses: actions/download-artifact@v4
         with:
-          distribution: 'temurin'
-          java-version: ${{ inputs.java-version }}
-
-      # Used only by tracker for gdrive_credentials.json
-      # Will be removed in the future
-      - name: Create extra file
-        uses: jsdaniell/create-json@v1.2.3
-        if: ${{ inputs.extra-json-file }}
-        with:
-          name: ${{ secrets.extra-json-file-name }}
-          json: ${{ secrets.extra-json-file-content }}
-          dir: ${{ secrets.extra-json-file-dir }}
-
-      - name: Package
-        run: |
-          # TODO: is this needed?
-          #sed -i 's+./logs/+${HOME}/logs/+g' src/main/resources/logback-spring.xml
-
-          IFS=$'\n'
-          for line in ${{ inputs.env-vars }}
-          do 
-            echo "$line" >> "$GITHUB_ENV"
-          done
-
-          mvn -q clean package
+          name: application
+          path: 'target/'
 
       - name: Copy deploy script to target
         run: cp deploy.sh target/
@@ -107,12 +65,6 @@ jobs:
           key: ${{ secrets.sshkey }}
           passphrase: ${{ secrets.passphrase }}
           script: |
-            IFS=$'\n'
-            for line in ${{ inputs.env-vars }}
-            do 
-              declare -x "$line"
-            done
-
             cd $HOME
             chmod +x deploy.sh
             ./deploy.sh -n ${{ inputs.app-name }} -a start
