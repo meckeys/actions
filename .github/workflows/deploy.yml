@@ -60,4 +60,10 @@ jobs:
           passphrase: ${{ secrets.passphrase }}
           envs: VARIABLES
           script: |
+            for var_block in ${VARIABLES}; do
+              if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
+                declare -x "${var_block%%=*}='${var_block#*=}'"
+                echo "${var_block%%=*}='${var_block#*=}'"
+              fi
+            done
             ./deploy.sh -n ${{ inputs.app-name }} -a start
