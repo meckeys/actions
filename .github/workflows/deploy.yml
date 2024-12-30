@@ -57,8 +57,8 @@ jobs:
 
           for var_block in ${vars}; do
             if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
-              echo "${var_block%%=*}=${var_block#*=}" >> "$GITHUB_ENV" 
-              echo "${var_block%%=*}=${var_block#*=}"
+              echo "${var_block%%=*}='${var_block#*=}'" >> "$GITHUB_ENV" 
+              echo "${var_block%%=*}='${var_block#*=}'"
               vn+="${var_block%%=*},"
             fi
           done
