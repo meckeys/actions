@@ -132,7 +132,7 @@ while [ "$#" -gt 0 ]; do
             shift
             ;;
         -e | --extra-args )
-            EXTRA_ARGS=($2)
+            EXTRA_ARGS+=("$2")
             shift
             ;;
         * )
