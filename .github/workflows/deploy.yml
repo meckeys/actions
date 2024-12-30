@@ -6,9 +6,6 @@ on:
       app-name:
         required: true
         type: string
-      vars:
-        required: true
-        type: string
     secrets:
       host:
         required: true
@@ -17,6 +14,8 @@ on:
       key:
         required: true
       passphrase:
+        required: true
+      vars:
         required: true
       
 
@@ -53,7 +52,30 @@ jobs:
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
           source: "${{ inputs.app-name }}.jar"
-          target: "$HOME/apps/${{ inputs.app-name }}"       
+          target: "$HOME/apps/${{ inputs.app-name }}"
+      
+      - name: Parse secrets
+        run: |
+          {
+            cat <<EOF
+            var_names=
+
+            for var_block in ${vars}; do
+              if [ "$var_block" =~ ^[A-Za-z]+=.+$ ]; then
+                echo declare!
+                echo $var_block >> "$GITHUB_ENV" 
+                var_names+="${var_block%%=*},"
+              fi
+            done
+
+            echo "var_names=${var_names%,}" > "$GITHUB_ENV"
+
+            EOF
+          } > parse
+          chmod +x parse
+          bash ./parse
+        env:
+          vars: ${{ secrets.vars }}
 
       - name: Run project
         uses: appleboy/ssh-action@v1.2.0
@@ -62,5 +84,6 @@ jobs:
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
+          envs: "$var_names"
           script: |
             ./deploy.sh -n ${{ inputs.app-name }} -a start
