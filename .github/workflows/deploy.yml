@@ -6,6 +6,20 @@ on:
       app-name:
         required: true
         type: string
+      vars:
+        required: false
+        type: string
+    secrets:
+      host:
+        required: true
+      username:
+        required: true
+      key:
+        required: true
+      passphrase:
+        required: true
+      vars:
+        required: true
       
 
 jobs:
@@ -16,14 +30,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: application   
+      
+      - name: vars test
+        run: |
+          echo test
+          echo ${{ inputs.vars }}
 
       - name: Stop project if running
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.key }}
+          passphrase: ${{ secrets.passphrase }}
           script: |
             ./deploy.sh -n ${{ inputs.app-name }} -a stop
             rm -rf apps/${{ inputs.app-name }}
@@ -31,51 +50,19 @@ jobs:
       - name: Copy project files
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.key }}
+          passphrase: ${{ secrets.passphrase }}
           source: "${{ inputs.app-name }}.jar"
-          target: "$HOME/apps/${{ inputs.app-name }}"
-
-      - name: Run project (tracker only)
-        if: ${{ inputs.app-name == 'tracker' }}
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          envs: BLUEDART_USER_LOGINID, BLUEDART_USER_LICENSEKEY, BLUEDART_API_LICENSE_KEY, DELHIVERY_API_TOKEN, GDRIVE_API_PARENT_ID, GDRIVE_API_SERVICE_ACCOUNT, MECKEYS_API_USERNAME, MECKEYS_API_PASSWORD, MECKEYS_URL_HOST, MECKEYS_WEBHOOK_SECRET, RAZORPAY_API_KEY, RAZORPAY_API_SECRET, SMARTR_API_USERNAME, SMARTR_API_PASSWORD, SPRING_SECURITY_USERS, TWOFACTOR_API_KEY, INTERAKT_API_KEY, ZEPTOMAIL_API_PASSWORD
-          script: |
-            ./deploy.sh -n ${{ inputs.app-name }} -a start
-        env:
-          BLUEDART_USER_LOGINID: ${{ secrets.BLUEDART_USER_LOGINID }}
-          BLUEDART_USER_LICENSEKEY: ${{ secrets.BLUEDART_USER_LICENSEKEY }}
-          BLUEDART_API_LICENSE_KEY: ${{ secrets.BLUEDART_API_LICENSE_KEY }}
-          DELHIVERY_API_TOKEN: ${{ secrets.DELHIVERY_API_TOKEN }}
-          GDRIVE_API_PARENT_ID: ${{ secrets.GDRIVE_API_PARENT_ID }}
-          GDRIVE_API_SERVICE_ACCOUNT: ${{ secrets.GDRIVE_API_SERVICE_ACCOUNT }}
-          INTERAKT_API_KEY: ${{ secrets.INTERAKT_API_KEY }}
-          MECKEYS_API_USERNAME: ${{ secrets.MECKEYS_API_USERNAME }}
-          MECKEYS_API_PASSWORD: ${{ secrets.MECKEYS_API_PASSWORD }}
-          MECKEYS_URL_HOST: ${{ secrets.MECKEYS_URL_HOST }}
-          MECKEYS_WEBHOOK_SECRET: ${{ secrets.MECKEYS_WEBHOOK_SECRET }}
-          RAZORPAY_API_KEY: ${{ secrets.RAZORPAY_API_KEY }}
-          RAZORPAY_API_SECRET: ${{ secrets.RAZORPAY_API_SECRET }}
-          SMARTR_API_USERNAME: ${{ secrets.SMARTR_API_USERNAME }}
-          SMARTR_API_PASSWORD: ${{ secrets.SMARTR_API_PASSWORD }}
-          SPRING_SECURITY_USERS: ${{ secrets.SPRING_SECURITY_USERS }}
-          TWOFACTOR_API_KEY: ${{ secrets.TWOFACTOR_API_KEY }}
-          ZEPTOMAIL_API_PASSWORD: ${{ secrets.ZEPTOMAIL_API_PASSWORD }}        
+          target: "$HOME/apps/${{ inputs.app-name }}"       
 
       - name: Run project
-        if: ${{ inputs.app-name != 'tracker' }}
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.key }}
+          passphrase: ${{ secrets.passphrase }}
           script: |
             ./deploy.sh -n ${{ inputs.app-name }} -a start
