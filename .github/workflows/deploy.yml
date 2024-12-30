@@ -61,7 +61,7 @@ jobs:
             var_names=
 
             for var_block in ${vars}; do
-              if [ "$var_block" =~ ^[A-Za-z]+=.+$ ]; then
+              if [[ "$var_block" =~ ^[A-Za-z]+=.+$ ]]; then
                 echo declare!
                 echo $var_block >> "$GITHUB_ENV" 
                 var_names+="${var_block%%=*},"
