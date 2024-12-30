@@ -51,18 +51,17 @@ jobs:
       
       - name: Parse secrets
         run: |
-          var_names=
+          vn=
 
           for var_block in ${vars}; do
             if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
-
-              echo "$var_block" >> "$GITHUB_ENV" 
-              echo "$var_block"
-              var_names+="${var_block%%=*},"
+              echo "$var_block{%%=*}=${var_block#*=}" >> "$GITHUB_ENV" 
+              echo "$var_block{%%=*}=${var_block#*=}"
+              vn+="${var_block%%=*},"
             fi
           done
 
-          echo "var_names=${var_names%,*}" >> "$GITHUB_ENV"
+          echo "var_names=${vn%,}" >> "$GITHUB_ENV"
 
           echo "test: ${var_names}"
           echo "testx: ${ZEPTOMAIL_API_PASSWORD}"
