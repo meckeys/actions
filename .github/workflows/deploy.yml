@@ -34,6 +34,17 @@ jobs:
         with:
           name: application
 
+      - name: Copy deploy script
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.key }}
+          passphrase: ${{ secrets.passphrase }}
+          overwrite: true
+          source: "deploy.sh"
+          target: "$HOME"
+
       - name: Stop application if running & check version
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -44,6 +55,7 @@ jobs:
           script: | 
             if [ "${{ inputs.version }}" != "$(./deploy.sh -v)" ]; then
               echo deploy script version mismatch!
+              exit 1
             fi
 
             ./deploy.sh -n ${{ inputs.app-name }} -a stop
@@ -56,6 +68,7 @@ jobs:
           username: ${{ secrets.username }}
           key: ${{ secrets.key }}
           passphrase: ${{ secrets.passphrase }}
+          overwrite: true
           source: "${{ inputs.app-name }}.jar"
           target: "apps/${{ inputs.app-name }}"
 
