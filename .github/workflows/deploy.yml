@@ -37,7 +37,7 @@ jobs:
       
       - name: ls 
         run: |
-        ls -laR
+          ls -laR
 
       - name: Download application jar
         uses: actions/download-artifact@v4
