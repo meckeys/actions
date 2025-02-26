@@ -93,6 +93,7 @@ jobs:
           passphrase: ${{ secrets.passphrase }}
           envs: VARS
           script: |
+            IFS=$'\n'
             for var_block in ${VARS}; do
               if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
                 declare -x "${var_block%%=*}=${var_block#*=}"
