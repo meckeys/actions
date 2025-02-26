@@ -93,16 +93,14 @@ jobs:
           passphrase: ${{ secrets.passphrase }}
           envs: VARS
           script: |
-            export $VARS
-            # echo $VARS
-            # for var_block in ${VARS}; do
-            #   if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
-            #     declare -x "${var_block%%=*}=${var_block#*=}"
-            #     echo "VAR NAME : ${var_block%%=*}"
-            #   else
-            #     echo "INVALID $var_block"            
-            #   fi
-            # done
+            for var_block in ${VARS}; do
+              if [[ "$var_block" =~ ^[A-Za-z].+=.+$ ]]; then
+                declare -x "${var_block%%=*}=${var_block#*=}"
+                echo "VAR NAME : ${var_block%%=*}"
+              else
+                echo "INVALID $var_block"            
+              fi
+            done
             chown "$(whoami):$(whoami)" "apps/${{ inputs.app-name }}/${{ inputs.app-name }}.jar"
           
             ./deploy.sh -n "${{ inputs.app-name }}" -a start -e "-Dserver.port=${{ inputs.port }}"
